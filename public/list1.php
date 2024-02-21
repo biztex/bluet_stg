@@ -5,15 +5,15 @@
     <title>アクティビティ一覧 | ブルーツーリズム北海道 </title>
 </head>
 <body>
-    <div class="header"><a href="list.php"><img src ="https://blue-tourism-hokkaido.website/img/logo.png"></a></div>
+    <div class="header"><a href="list.php"><img src ="https://localblue/img/logo.png"></a></div>
     <div class="flex-container-plans">
     <?php
-    $url = "http://blue-tourism-hokkaido.website/api/plans/json/1";
+    $url = "https://localblue/api/plans/json/1";
     $json = file_get_contents($url);
     $plans = json_decode($json,true);
 
     for ($i = 0 ; $i < count($plans) ; $i++) {
-        echo '<div class="flex-item-plans"><a href="https://blue-tourism-hokkaido.website/public/detail.php?page_id=2622&plan_id=' . $plans[$i][id] . '"><img src="https://blue-tourism-hokkaido.website/public/uploads/' . $plans[$i][file_path1] . '"><p>' . $plans[$i][name] . '</p></a></div>';
+        echo '<div class="flex-item-plans"><a href="https://localblue/public/detail.php?page_id=2622&plan_id=' . $plans[$i][id] . '"><img src="https://localblue/public/uploads/' . $plans[$i][file_path1] . '"><p>' . $plans[$i][name] . '</p></a></div>';
     }
     ?>
     </div>

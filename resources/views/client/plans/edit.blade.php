@@ -1049,7 +1049,7 @@
                               @empty ($plans->file_path1)
                               <input type="file" name="file_path1">
                               @else
-                              <img id="img1" src="/public/uploads/{{ $plans->file_path1 }}" width="auto" height="150px">
+                              <img id="img1" src="/uploads/{{ $plans->file_path1 }}" width="auto" height="150px">
                               <input id="hidden1" type="hidden" name="old_file_path1" value="{{ old('file_path1',$plans->file_path1) }}">
                               @endempty
                             </div>
@@ -1067,7 +1067,7 @@
                               @empty ($plans->file_path2)
                               <input type="file" name="file_path2">
                               @else
-                              <img id="img2" src="/public/uploads/{{ $plans->file_path2 }}" width="auto" height="150px">
+                              <img id="img2" src="/uploads/{{ $plans->file_path2 }}" width="auto" height="150px">
                               <input id="hidden2" type="hidden" name="old_file_path2" value="{{ old('file_path2',$plans->file_path2) }}">
                               @endempty
                             </div>
@@ -1085,7 +1085,7 @@
                               @empty ($plans->file_path3)
                               <input type="file" name="file_path3">
                               @else
-                              <img id="img3" src="/public/uploads/{{ $plans->file_path3 }}" width="auto" height="150px">
+                              <img id="img3" src="/uploads/{{ $plans->file_path3 }}" width="auto" height="150px">
                               <input id="hidden3" type="hidden" name="old_file_path3" value="{{ old('file_path3',$plans->file_path3) }}">
                               @endempty
                             </div>
@@ -1103,7 +1103,7 @@
                               @empty ($plans->file_path4)
                               <input type="file" name="file_path4">
                               @else
-                              <img id="img4" src="/public/uploads/{{ $plans->file_path4 }}" width="auto" height="150px">
+                              <img id="img4" src="/uploads/{{ $plans->file_path4 }}" width="auto" height="150px">
                               <input id="hidden4" type="hidden" name="old_file_path4" value="{{ old('file_path4',$plans->file_path4) }}">
                               @endempty
                             </div>
@@ -1121,7 +1121,7 @@
                               @empty ($plans->file_path5)
                               <input type="file" name="file_path5">
                               @else
-                              <img id="img5" src="/public/uploads/{{ $plans->file_path5 }}" width="auto" height="150px">
+                              <img id="img5" src="/uploads/{{ $plans->file_path5 }}" width="auto" height="150px">
                               <input id="hidden5" type="hidden" name="old_file_path5" value="{{ old('file_path5',$plans->file_path5) }}">
                               @endempty
                             </div>
@@ -1139,7 +1139,7 @@
                               @empty ($plans->file_path6)
                               <input type="file" name="file_path6">
                               @else
-                              <img id="img6" src="/public/uploads/{{ $plans->file_path6 }}" width="auto" height="150px">
+                              <img id="img6" src="/uploads/{{ $plans->file_path6 }}" width="auto" height="150px">
                               <input id="hidden6" type="hidden" name="old_file_path6" value="{{ old('file_path6',$plans->file_path6) }}">
                               @endempty
                             </div>
@@ -1157,7 +1157,7 @@
                               @empty ($plans->file_path7)
                               <input type="file" name="file_path7">
                               @else
-                              <img id="img7" src="/public/uploads/{{ $plans->file_path7 }}" width="auto" height="150px">
+                              <img id="img7" src="/uploads/{{ $plans->file_path7 }}" width="auto" height="150px">
                               <input id="hidden7" type="hidden" name="old_file_path7" value="{{ old('file_path7',$plans->file_path7) }}">
                               @endempty
                             </div>
@@ -1175,7 +1175,7 @@
                               @empty ($plans->file_path8)
                               <input type="file" name="file_path8">
                               @else
-                              <img id="img8" src="/public/uploads/{{ $plans->file_path8 }}" width="auto" height="150px">
+                              <img id="img8" src="/uploads/{{ $plans->file_path8 }}" width="auto" height="150px">
                               <input id="hidden8" type="hidden" name="old_file_path8" value="{{ old('file_path8',$plans->file_path8) }}">
                               @endempty
                             </div>
@@ -1193,7 +1193,7 @@
                               @empty ($plans->file_path9)
                               <input type="file" name="file_path9">
                               @else
-                              <img id="img9" src="/public/uploads/{{ $plans->file_path9 }}" width="auto" height="150px">
+                              <img id="img9" src="/uploads/{{ $plans->file_path9 }}" width="auto" height="150px">
                               <input id="hidden9" type="hidden" name="old_file_path9" value="{{ old('file_path9',$plans->file_path9) }}">
                               @endempty
                             </div>
@@ -1211,7 +1211,7 @@
                               @empty ($plans->file_path10)
                               <input type="file" name="file_path10">
                               @else
-                              <img id="img10" src="/public/uploads/{{ $plans->file_path10 }}" width="auto" height="150px">
+                              <img id="img10" src="/uploads/{{ $plans->file_path10 }}" width="auto" height="150px">
                               <input id="hidden10" type="hidden" name="old_file_path10" value="{{ old('file_path10',$plans->file_path10) }}">
                               @endempty
                             </div>
@@ -2273,7 +2273,7 @@ $('#post-button').on('click',function(){
 })
 
 </script>
-<script src='https://maps.google.com/maps/api/js?key=AIzaSyB7CkBjPmwOkMOo-pcyGN1APV7kNEl24nM' type="text/javascript"></script>
+<script src='https://maps.google.com/maps/api/js?key=AIzaSyCG9SfPt8adGSdlgWkq8jdbt64mYaPRkaM' type="text/javascript"></script>
 <script src="{{ asset('/js/jquery.colorbox-min.js')}}"></script>
 <script src="{{ asset('/js/map.js')}}"></script>
 <script src="{{ asset('/js/map2.js')}}"></script>

@@ -46,7 +46,7 @@ return [
     */
 
     'logo' => '<b></b>管理画面',
-    'logo_img' => 'img/logo_login.png',
+    'logo_img' => './img/logo_login.png',
 //    'logo_img_class' => 'brand-image img-circle elevation-3',
 //    'logo_img_xl' => null,
 //    'logo_img_xl_class' => 'brand-image-xs',
@@ -188,8 +188,8 @@ return [
 
     'use_route_url' => false,
     'dashboard_url' => 'mypage',
-    'logout_url' => explode("/", $_SERVER["REQUEST_URI"])[1] . '/logout',
-    'login_url' => explode("/", $_SERVER["REQUEST_URI"])[1] . '/login',
+    //'logout_url' => explode("/", $_SERVER["REQUEST_URI"])[1] . '/logout',
+    //'login_url' => explode("/", $_SERVER["REQUEST_URI"])[1] . '/login',
     'register_url' => 'register',
     'password_reset_url' => 'password/reset',
     'password_email_url' => 'password/email',
@@ -474,4 +474,13 @@ return [
     */
 
     'livewire' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | TOKEN API KEY
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'TOKEN_API_KEY' => '1493ffc3-323d-470c-b617-c116e639f6b1',
 ];

@@ -33,7 +33,7 @@ class PriceTypesController extends Controller
         ];
         $this->validate($request, $rules);
         $total_records = PriceType::count();
-        if ($total_records >= 20) {
+        if ($total_records >= 100) {
             throw ValidationException::withMessages(['full_price_types' => 'これ以上の料金区分は追加できません']);
         }
         $price_types = new PriceType;

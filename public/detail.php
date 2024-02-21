@@ -3,14 +3,14 @@ if ($_GET["plan_id"]) {
     $plan_id = $_GET["plan_id"];
 }
 if ($_GET["preview"] == 1) {
-    $url = "http://localhost/api/plan/json/" . $plan_id . '/1';
+    $url = "http://153.127.31.62/blue-tourism-hokkaido2/api/plan/json/" . $plan_id . '/1';
 } else {
-    $url = "http://localhost/api/plan/json/" . $plan_id;
+    $url = "http://153.127.31.62/blue-tourism-hokkaido2/api/plan/json/" . $plan_id;
 }
 $array = file_get_contents($url);
 $plan = json_decode($array,true);
 if (!$plan) {
-    header('Location: https://blue-tourism-hokkaido.website/public/list.php');
+    header('Location: https://blue.zenryo-ec.info/list.php');
 }
 $plan_json = json_encode($array, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
 $plan_json = str_replace('¥u0022', '¥¥¥"', $plan_json);
@@ -30,10 +30,10 @@ if ($_GET["year"] && $_GET["month"]) {
 $next_y = $next_m_date->format('Y');
 $next_m = $next_m_date->format('m');
 
-$url_stocks = "http://localhost/api/stocks/json/" . $current_y . '/' . $current_m . '/' . $plan_id;
+$url_stocks = "http://153.127.31.62/blue-tourism-hokkaido2/api/stocks/json/" . $current_y . '/' . $current_m . '/' . $plan_id;
 $json_stocks = file_get_contents($url_stocks);
 $stocks = json_decode($json_stocks,true);
-$url_stocks_next = "http://localhost/api/stocks/json/" . $next_y . '/' . $next_m . '/' . $plan_id;
+$url_stocks_next = "http://153.127.31.62/blue-tourism-hokkaido2/api/stocks/json/" . $next_y . '/' . $next_m . '/' . $plan_id;
 $json_stocks_next = file_get_contents($url_stocks_next);
 $stocks_next = json_decode($json_stocks_next,true);
 ?>
@@ -45,6 +45,7 @@ $stocks_next = json_decode($json_stocks_next,true);
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css">
+<link rel="stylesheet" type="text/css" href="./css/template.css">
 		<style type="text/css">
 img.wp-smiley,
 img.emoji {
@@ -184,7 +185,16 @@ html{font-size:93.75%;}a,.page-title{color:#0274be;}a:hover,a:focus{color:#3a3a3
 </head>
 
 <body>
-<div class="header"><a href="list.php"><img src ="https://blue-tourism-hokkaido.website/img/logo.png"></a></div>
+<div id="glang">
+	<div id="google_translate_element"></div>
+	<script type="text/javascript">
+	function googleTranslateElementInit() {
+	  new google.translate.TranslateElement({pageLanguage: 'ja', includedLanguages: 'en,ja,ko,zh-CN,zh-TW', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+	}
+	</script>
+	<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</div>
+<div class="header"><a href="list.php"><img src ="https://blue.zenryo-ec.info/img/logo.png"></a></div>
 <div class="container-plan">
 	<div class="title">
 		<span><?=$plan[0][name]?></span>
@@ -230,7 +240,7 @@ html{font-size:93.75%;}a,.page-title{color:#0274be;}a:hover,a:focus{color:#3a3a3
 	    for ($i = 1; $i <= 10; $i++) {
          	$index_name = "file_path" . $i;
 		if ($plan[0][$index_name]) {
-	            echo "<li><img src='/public/uploads/{$plan[0][$index_name]}' alt=></li>";
+	            echo "<li><img src='./uploads/{$plan[0][$index_name]}' alt=></li>";
 		}
             }
 	?>
@@ -241,7 +251,7 @@ html{font-size:93.75%;}a,.page-title{color:#0274be;}a:hover,a:focus{color:#3a3a3
 	    for ($i = 1; $i <= 10; $i++) {
          	$index_name = "file_path" . $i;
 		if ($plan[0][$index_name]) {
-	            echo "<li><img src='/public/uploads/{$plan[0][$index_name]}' alt=></li>";
+	            echo "<li><img src='./uploads/{$plan[0][$index_name]}' alt=></li>";
 	            $img_count++;
 		}
             }
@@ -291,26 +301,27 @@ html{font-size:93.75%;}a,.page-title{color:#0274be;}a:hover,a:focus{color:#3a3a3
                 	    }
                 	    $count = 0;
                 	    foreach ($stocks[stocks] as $stock) {
-                	    	if ($current_date->format('Y-m-d') == $stock[res_date] && $stock[is_active] == 1) {
+                	    	if ($current_date->format('Y-m-d') == $stock['res_date'] && $stock[is_active] == 1) {
 					// 現在時刻
 					$now = new DateTime();
 			                // 受付開始日計算
 			                $time1 = sprintf('%02d', $plan[0][res_before_time]);
-			                $res_before_datetime = new DateTime($stock[res_date] . " " . $time1 . ":00");
+			                $res_before_datetime = new DateTime($stock['res_date'] . " " . $time1 . ":00");
 			                $res_before_datetime = $res_before_datetime->modify('-' . $plan[0][res_before_day]. ' day')->format('Y-m-d H:i');
+                            //$res_before_datetime = $res_before_datetime->modify('- day')->format('Y-m-d H:i');
 			                //////
 			                //// 受付締切日計算（即時予約）
 			                $time2 = sprintf('%02d', $plan[0][res_end_time]);
-			                $res_end_datetime = new DateTime($stock[res_date] . " " . $time2 . ":00");
+			                $res_end_datetime = new DateTime($stock['res_date'] . " " . $time2 . ":00");
 			                $res_end_datetime = $res_end_datetime->modify('-' . ($plan[0][res_end_day]) . ' day');
 			                //////
 			                //// 受付締切日計算（リクエスト予約）
 			                $time3 = sprintf('%02d', $plan[0][req_before_time]);
-			                $req_before_datetime = new DateTime($stock[res_date] . " " . $time3 . ":00");
-			                $req_before_datetime = $req_before_datetime->modify('-' . ($plan[0][req_before_day]) . ' day');
+			                $req_before_datetime = new DateTime($stock['res_date'] . " " . $time3 . ":00");
+			                $req_before_datetime = $req_before_datetime->modify('-' . ($plan[0]['req_before_day'] ) . ' day');
 			                ////
-                	    		//if ($stock[res_type] == 0 && $stock[res_date] > date("Y-m-d")) {
-                	    		if ($stock[res_type] == 0 && $stock[res_date] >= date("Y-m-d") && date("Y-m-d H:i") >= $res_before_datetime && $now <= $res_end_datetime) {
+                	    		//if ($stock[res_type] == 0 && $stock['res_date'] > date("Y-m-d")) {
+                	    		if ($stock[res_type] == 0 && $stock['res_date'] >= date("Y-m-d") && date("Y-m-d H:i") >= $res_before_datetime && $now <= $res_end_datetime) {
                 	    		    echo '<td>' . $d . '<br />';
                                             if ($stock[limit_number] > 0) {
                 	    		    	echo '<a class="selected-date" style="cursor:pointer;">○</a><input type="hidden" value="' . $current_date->format('Y-m-d') . '">';
@@ -322,15 +333,15 @@ html{font-size:93.75%;}a,.page-title{color:#0274be;}a:hover,a:focus{color:#3a3a3
 					    $count++;
                 	    		} else if ($stock[res_type] == 1) {
                 	    		    echo '<td>' . $d . '<br />';
-                	    		    if ($stock[limit_number] > 0 && $stock[res_date] >= date("Y-m-d") && date("Y-m-d H:i") >= $res_before_datetime && $now <= $res_end_datetime) {
+                	    		    if ($stock[limit_number] > 0 && $stock['res_date'] >= date("Y-m-d") && date("Y-m-d H:i") >= $res_before_datetime && $now <= $res_end_datetime) {
                 	    		    	echo '<a class="selected-date" style="cursor:pointer;">○</a><input type="hidden" value="' . $current_date->format('Y-m-d') . '">';
-                	    		    } else if ($stock[limit_number] == 0 && $stock[res_date] >= date("Y-m-d") && date("Y-m-d H:i") >= $res_before_datetime && $now <= $req_before_datetime) {
+                	    		    } else if ($stock[limit_number] == 0 && $stock['res_date'] >= date("Y-m-d") && date("Y-m-d H:i") >= $res_before_datetime && $now <= $req_before_datetime) {
                 	    		    	echo '<a class="selected-date" style="cursor:pointer;">□</a><input type="hidden" value="' . $current_date->format('Y-m-d') . '">';
                 	    		    } else {
                    	                        echo '-';
                 	    		    }
 					    $count++;
-                	    		} else if ($stock[res_type] == 2 && $stock[res_date] >= date("Y-m-d")  && date("Y-m-d H:i") >= $res_before_datetime && $now <= $req_before_datetime) {
+                	    		} else if ($stock[res_type] == 2 && $stock['res_date'] >= date("Y-m-d")  && date("Y-m-d H:i") >= $res_before_datetime && $now <= $req_before_datetime) {
                 	    		    echo '<td>' . $d . '<br />';
                                             echo '<a class="selected-date" style="cursor:pointer;">□</a><input type="hidden" value="' . $current_date->format('Y-m-d') . '">';
 					    $count++;
@@ -389,26 +400,27 @@ html{font-size:93.75%;}a,.page-title{color:#0274be;}a:hover,a:focus{color:#3a3a3
                 	    }
                 	    $count = 0;
                 	    foreach ($stocks[stocks] as $stock) {
-                	    	if ($current_date->format('Y-m-d') == $stock[res_date] && $stock[is_active] == 1) {
+                	    	if ($current_date->format('Y-m-d') == $stock['res_date'] && $stock[is_active] == 1) {
 					// 現在時刻
 					$now = new DateTime();
 			                // 受付開始日計算
 			                $time1 = sprintf('%02d', $plan[0][res_before_time]);
-			                $res_before_datetime = new DateTime($stock[res_date] . " " . $time1 . ":00");
+			                $res_before_datetime = new DateTime($stock['res_date'] . " " . $time1 . ":00");
 			                $res_before_datetime = $res_before_datetime->modify('-' . $plan[0][res_before_day]. ' day')->format('Y-m-d H:i');
+                            //$res_before_datetime = $res_before_datetime->modify('- day')->format('Y-m-d H:i');
 			                //////
 			                //// 受付締切日計算（即時予約）
 			                $time2 = sprintf('%02d', $plan[0][res_end_time]);
-			                $res_end_datetime = new DateTime($stock[res_date] . " " . $time2 . ":00");
+			                $res_end_datetime = new DateTime($stock['res_date'] . " " . $time2 . ":00");
 			                $res_end_datetime = $res_end_datetime->modify('-' . ($plan[0][res_end_day]) . ' day');
 			                //////
 			                //// 受付締切日計算（リクエスト予約）
 			                $time3 = sprintf('%02d', $plan[0][req_before_time]);
-			                $req_before_datetime = new DateTime($stock[res_date] . " " . $time3 . ":00");
-			                $req_before_datetime = $req_before_datetime->modify('-' . ($plan[0][req_before_day]) . ' day');
+			                $req_before_datetime = new DateTime($stock['res_date'] . " " . $time3 . ":00");
+			                $req_before_datetime = $req_before_datetime->modify('-' . ($plan[0]['req_before_day'] ) . ' day');
 			                ////
-                	    		//if ($stock[res_type] == 0 && $stock[res_date] > date("Y-m-d")) {
-                	    		if ($stock[res_type] == 0 && $stock[res_date] >= date("Y-m-d") && date("Y-m-d H:i") >= $res_before_datetime && $now <= $res_end_datetime) {
+                	    		//if ($stock[res_type] == 0 && $stock['res_date'] > date("Y-m-d")) {
+                	    		if ($stock[res_type] == 0 && $stock['res_date'] >= date("Y-m-d") && date("Y-m-d H:i") >= $res_before_datetime && $now <= $res_end_datetime) {
                 	    		    echo '<td>' . $d . '<br />';
                                             if ($stock[limit_number] > 0) {
                 	    		    	echo '<a class="selected-date" style="cursor:pointer;">○</a><input type="hidden" value="' . $current_date->format('Y-m-d') . '">';
@@ -420,15 +432,15 @@ html{font-size:93.75%;}a,.page-title{color:#0274be;}a:hover,a:focus{color:#3a3a3
 					    $count++;
                 	    		} else if ($stock[res_type] == 1) {
                 	    		    echo '<td>' . $d . '<br />';
-                	    		    if ($stock[limit_number] > 0 && $stock[res_date] >= date("Y-m-d") && date("Y-m-d H:i") >= $res_before_datetime && $now <= $res_end_datetime) {
+                	    		    if ($stock[limit_number] > 0 && $stock['res_date'] >= date("Y-m-d") && date("Y-m-d H:i") >= $res_before_datetime && $now <= $res_end_datetime) {
                 	    		    	echo '<a class="selected-date" style="cursor:pointer;">○</a><input type="hidden" value="' . $current_date->format('Y-m-d') . '">';
-                	    		    } else if ($stock[limit_number] == 0 && $stock[res_date] >= date("Y-m-d") && date("Y-m-d H:i") >= $res_before_datetime && $now <= $req_before_datetime) {
+                	    		    } else if ($stock[limit_number] == 0 && $stock['res_date'] >= date("Y-m-d") && date("Y-m-d H:i") >= $res_before_datetime && $now <= $req_before_datetime) {
                 	    		    	echo '<a class="selected-date" style="cursor:pointer;">□</a><input type="hidden" value="' . $current_date->format('Y-m-d') . '">';
                 	    		    } else {
                    	                        echo '-';
                 	    		    }
 					    $count++;
-                	    		} else if ($stock[res_type] == 2 && $stock[res_date] >= date("Y-m-d") && date("Y-m-d H:i") >= $res_before_datetime && $now <= $req_before_datetime) {
+                	    		} else if ($stock[res_type] == 2 && $stock['res_date'] >= date("Y-m-d") && date("Y-m-d H:i") >= $res_before_datetime && $now <= $req_before_datetime) {
                 	    		    echo '<td>' . $d . '<br />';
                                             echo '<a class="selected-date" style="cursor:pointer;">□</a><input type="hidden" value="' . $current_date->format('Y-m-d') . '">';
 					    $count++;
@@ -589,22 +601,14 @@ html{font-size:93.75%;}a,.page-title{color:#0274be;}a:hover,a:focus{color:#3a3a3
 
     <footer class="footer_wrap">
         <a href="company.php">会社概要</a>
-        <a href="tradelaw.php">特定商取引法に基づく表記</a>
+        <!-- <a href="tradelaw.php">特定商取引法に基づく表記</a> -->
         <a href="privacy.php">プライバシーポリシー</a>
     </footer>
     <div class="copy">Copyright © BlueTourismHokkaido All rights reserved</div>
 </div>
 
 <style type="text/css">
-.header {
-    margin: 0 61px;
-    padding: 8px 0 10px 0;
-    text-align: left;
-    border-bottom: 1px solid #ccc;
-}
-.header img {
-    width: 200px;
-}
+
 .price {
 	text-align: center;
 }
@@ -873,10 +877,6 @@ input[name="tab_item"] {
 }
 
 @media screen and (max-width: 767px) {
-    .header {
-        text-align: center;
-        margin: 0px;
-    }
     .container-plan {
         width: 100%;
     }
@@ -910,32 +910,10 @@ input[name="tab_item"] {
     }
 }
 
-/*footer2022-02-16*/
-.footer_wrap {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 60px;
-}
-.footer_wrap a {
-    margin-right:30px;
-}
-.footer_wrap a:nth-last-child(1) {
-    margin-right:0px;
-}
-.copy {
-    text-align:center;
-    margin-top:15px;
-}
-@media screen and (max-width: 767px) {
-    .footer_wrap {
-    flex-direction:column;
-}
-}
 </style>
 
 </body>
-<script src='https://maps.google.com/maps/api/js?key=AIzaSyB7CkBjPmwOkMOo-pcyGN1APV7kNEl24nM' type="text/javascript"></script>
+<script src='https://maps.google.com/maps/api/js?key=AIzaSyCG9SfPt8adGSdlgWkq8jdbt64mYaPRkaM' type="text/javascript"></script>
 <script>
 // マップ1設定
 if (document.getElementById('lat') && document.getElementById('lng')) {
@@ -1022,7 +1000,7 @@ $(function() {
         date.setMonth(date.getMonth() - 2); // ここで1ヶ月前をセット
         let prevMonthYear = date.getFullYear();
         let prevMonth = date.getMonth() + 1;
-        location.href = 'https://blue-tourism-hokkaido.website/public/detail.php/?page_id=2622&year=' + prevMonthYear + '&month=' + prevMonth + '&plan_id=' + planId + '#anchor-calendar';
+        location.href = 'https://blue.zenryo-ec.info/detail.php/?page_id=2622&year=' + prevMonthYear + '&month=' + prevMonth + '&plan_id=' + planId + '#anchor-calendar';
     });
     $('.next-month').click(function () {
         let year = "<?= $current_y ?>",
@@ -1032,7 +1010,7 @@ $(function() {
         date.setMonth(date.getMonth() + 1); // ここで1ヶ月後をセット
         let nextMonthYear = date.getFullYear();
         let nextMonth = date.getMonth();
-        location.href = 'https://blue-tourism-hokkaido.website/public/detail.php/?page_id=2622&year=' + nextMonthYear + '&month=' + nextMonth + '&plan_id=' + planId + '#anchor-calendar';
+        location.href = 'https://blue.zenryo-ec.info/detail.php/?page_id=2622&year=' + nextMonthYear + '&month=' + nextMonth + '&plan_id=' + planId + '#anchor-calendar';
     });
 });
 
@@ -1109,7 +1087,7 @@ $('.reserve-button').click(function () {
     } else {
         resType = 1;
     }
-	open( "https://blue-tourism-hokkaido.website/reservations/create?plan_id=" + planId + "&date=" + date + '&is_request=' + resType, "_blank" ) ;
+	open( "https://blue.zenryo-ec.info/reservations/create?plan_id=" + planId + "&date=" + date + '&is_request=' + resType, "_blank" ) ;
 });
 
 </script>

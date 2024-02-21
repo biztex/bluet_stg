@@ -45,17 +45,17 @@ class CvsController extends Controller
         $request_data->setTelNo($request->request->get("telNo"));
         $request_data->setPayLimit($request->request->get("payLimit"));
         $request_data->setPayLimitHhmm($request->request->get("payLimitHhmm"));
-        $request_data->setPushUrl('https://blue-tourism-hokkaido.website/api/reservations/client/cvs-push');
+        $request_data->setPushUrl('https://blue.zenryo-ec.info/push/mpi');
         $request_data->setPaymentType("0");
 
-        TGMDK_Config::getInstance("/var/www/blue-tourism-hokkaido/local_packages/veritrans-tgmdk/src/tgMdk/3GPSMDK.properties");
+        TGMDK_Config::getInstance();
         $transaction = new TGMDK_Transaction();
         /*
         $response_data = $transaction->execute($request_data);
         */ 
-        $props["merchant_ccid"] = "A100000800000001100705cc";
-        $props["merchant_secret_key"] = "d1ee259e52da562b63e02caaa44e420966dab3bb20acf3cb36c01d17d69412b3";
-        $response_data = $transaction->execute($request_data, $props);
+        //$props["merchant_ccid"] = "A100000800000001100705cc";
+        //$props["merchant_secret_key"] = "d1ee259e52da562b63e02caaa44e420966dab3bb20acf3cb36c01d17d69412b3";
+        $response_data = $transaction->execute($request_data);
 
         if ($response_data instanceof CvsAuthorizeResponseDto) {
             $request->session()->put($request->request->get("orderId"), $response_data);
@@ -80,7 +80,7 @@ class CvsController extends Controller
 	    	$weekday = 'holiday';
                 }
             }
-            Mail::send(['text' => 'user.reservations.email'], [
+            Mail::send(['text' => 'user.reservations.cvs_pre_email'], [
                 "number" => $reservation->number,
                 "plan" => $reservation->plan->name,
                 "date" => date('Y年m月d日', strtotime($reservation->fixed_datetime)),
@@ -101,8 +101,10 @@ class CvsController extends Controller
                     $message
                     ->to($reservation->user->email)
                     //->bcc(['blue@quality-t.com', 'test.zenryo@gmail.com'])
-                    ->bcc(['test.zenryo@gmail.com'])
-                    ->from('blue@quality-t.com')
+                    //->bcc(['test.zenryo@gmail.com'])
+                    ->bcc(['kaname-n@magokorobin.com', 'test@toebisu.jp'])
+                    //->from('no-reply@blue-tourism-hokkaido.website')
+                    ->from('test@toebisu.jp')
                     ->subject("【ブルーツーリズム北海道】コンビニ決済 仮予約メール");
 	        }
             });
@@ -124,6 +126,19 @@ class CvsController extends Controller
                         $count = $reservation->{'type'. $i . '_number'};
                         if ($count > 0) {
                             $count_member += $count;
+                        }
+                    }
+                    // 料金区分２０以上対応
+                    // 予約人数リセット
+                    if(!is_null($reservation->Number_of_reservations)){
+                        $Number_of_reservations = json_decode($reservation->Number_of_reservations);
+                        $count_member = 0;
+                        for($i=0;$i<=100;$i++){
+                            if(array_key_exists(sprintf('type%d_number', $i),$Number_of_reservations)){
+                                if($Number_of_reservations->{sprintf('type%d_number', $i)} > 0 ){
+                                    $count_member += $Number_of_reservations->{sprintf('type%d_number', $i)};
+                                }
+                            }
                         }
                     }
                     $stock->limit_number = $stock->limit_number - $count_member;
