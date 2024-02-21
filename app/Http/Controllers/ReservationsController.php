@@ -161,6 +161,11 @@ class ReservationsController extends Controller
         }
         $this->validate($request, $rules);
 
+        // Set locale to user's language
+        if ($request->has('lang')) {
+            app()->setLocale($request->lang);
+        }
+
         // 会員追加
         //if ($request->is_member == 1) {
         $user = User::where('email', $request->email)->first();
@@ -442,9 +447,9 @@ class ReservationsController extends Controller
                 // 予約者へメール通知
                 Mail::send(['text' => 'user.reservations.prepayemail'], [
                     "number" => $reservation->order_id,
-                    "plan" => $reservation->plan->name,
+                    "plan" => $request->plan_name,
                     "date" => date('Y年m月d日', strtotime($reservation->fixed_datetime)),
-                    "activity" => $reservation->activity_date,
+                    "activity" => $request->activity_name,
                     "name_last" => $request->name_last,
                     "name_first" => $request->name_first,
                     "email" => $request->email,
@@ -460,11 +465,9 @@ class ReservationsController extends Controller
                     if ($reservation->user->email) {
                         $message
                             ->to($reservation->user->email)
-                            //->bcc(['blue@quality-t.com', 'test.zenryo@gmail.com'])
+                            ->bcc(['blue@quality-t.com', 'test.zenryo@gmail.com'])
                             //->bcc(['test.zenryo@gmail.com'])
-                            ->bcc(['kaname-n@magokorobin.com', 'test@toebisu.jp'])
-                            //->from('blue@quality-t.com')
-                            ->from('test@toebisu.jp')
+                            ->from('blue@quality-t.com')
                             ->subject("【ブルーツーリズム北海道】予約確定メール");
                     }
                 });
@@ -508,9 +511,9 @@ class ReservationsController extends Controller
                 // 予約者へメール通知
                 Mail::send(['text' => 'user.reservations.spotemail'], [
                     "number" => $reservation->order_id,
-                    "plan" => $reservation->plan->name,
+                    "plan" => $request->plan_name,
                     "date" => date('Y年m月d日', strtotime($reservation->fixed_datetime)),
-                    "activity" => $reservation->activity_date,
+                    "activity" => $request->activity_name,
                     "name_last" => $request->name_last,
                     "name_first" => $request->name_first,
                     "email" => $request->email,
@@ -525,11 +528,9 @@ class ReservationsController extends Controller
                     if ($reservation->user->email) {
                         $message
                             ->to($reservation->user->email)
-                            //->bcc(['blue@quality-t.com', 'test.zenryo@gmail.com'])
+                            ->bcc(['blue@quality-t.com', 'test.zenryo@gmail.com'])
                             //->bcc(['test.zenryo@gmail.com'])
-                            ->bcc(['kaname-n@magokorobin.com', 'test@toebisu.jp'])
-                            //->from('no-reply@blue-tourism-hokkaido.website')
-                            ->from('test@toebisu.jp')
+                            ->from('no-reply@blue-tourism-hokkaido.website')
                             ->subject("【ブルーツーリズム北海道】予約確定メール");
                     }
                 });
@@ -574,9 +575,9 @@ class ReservationsController extends Controller
             // リクエスト予約者へメール通知
             Mail::send(['text' => 'user.reservations.reqemail'], [
                 "number" => $reservation->order_id,
-                "plan" => $plan->name,
+                "plan" => $request->plan_name,
                 "date" => date('Y年m月d日', strtotime($request->date)),
-                "activity" => $request->selected_activity,
+                "activity" => $request->activity_name,
                 "name_last" => $request->name_last,
                 "name_first" => $request->name_first,
                 "email" => $request->email,
@@ -589,10 +590,8 @@ class ReservationsController extends Controller
                 if ($request->email) {
                     $message
                         ->to($request->email)
-                        //->bcc(['blue@quality-t.com', 'test.zenryo@gmail.com'])
-                        ->bcc(['kaname-n@magokorobin.com', 'test@toebisu.jp'])
-                        //->from('no-reply@blue-tourism-hokkaido.website')
-                        ->from('test@toebisu.jp')
+                        ->bcc(['blue@quality-t.com', 'test.zenryo@gmail.com'])
+                        ->from('no-reply@blue-tourism-hokkaido.website')
                         ->subject("【ブルーツーリズム北海道】リクエスト予約確認メール");
                 }
             });
@@ -893,9 +892,9 @@ class ReservationsController extends Controller
         if ($pm == 0) { // 現地前払い
             Mail::send(['text' => 'user.reservations.spotemail'], [
                 "number" => $reservation->order_id,
-                "plan" => $reservation->plan->name,
+                "plan" => $request->plan_name,
                 "date" => date('Y年m月d日', strtotime($reservation->fixed_datetime)),
-                "activity" => $reservation->activity_date,
+                "activity" => $request->activity_name,
                 "name_last" => $reservation->user->name_last,
                 "name_first" => $reservation->user->name_first,
                 "email" => $reservation->user->email,
@@ -910,19 +909,17 @@ class ReservationsController extends Controller
                 if ($reservation->user->email) {
                     $message
                         ->to($reservation->user->email)
-                        //->bcc(['blue@quality-t.com', 'test.zenryo@gmail.com'])
-                        ->bcc(['kaname-n@magokorobin.com', 'test@toebisu.jp'])
-                        //->from('no-reply@blue-tourism-hokkaido.website')
-                        ->from('test@toebisu.jp')
+                        ->bcc(['blue@quality-t.com', 'test.zenryo@gmail.com'])
+                        ->from('no-reply@blue-tourism-hokkaido.website')
                         ->subject("【ブルーツーリズム北海道】決済金額通知メール");
                 }
             });
         } else if ($pm == 1) { // 事前払い
             Mail::send(['text' => 'user.reservations.prepayemail'], [
                 "number" => $reservation->order_id,
-                "plan" => $reservation->plan->name,
+                "plan" => $request->plan_name,
                 "date" => date('Y年m月d日', strtotime($reservation->fixed_datetime)),
-                "activity" => $reservation->activity_date,
+                "activity" => $request->activity_name,
                 "name_last" => $reservation->user->name_last,
                 "name_first" => $reservation->user->name_first,
                 "email" => $reservation->user->email,
@@ -937,10 +934,8 @@ class ReservationsController extends Controller
                 if ($reservation->user->email) {
                     $message
                         ->to($reservation->user->email)
-                        //->bcc(['blue@quality-t.com', 'test.zenryo@gmail.com'])
-                        ->bcc(['kaname-n@magokorobin.com', 'test@toebisu.jp'])
-                        //->from('no-reply@blue-tourism-hokkaido.website')
-                        ->from('test@toebisu.jp')
+                        ->bcc(['blue@quality-t.com', 'test.zenryo@gmail.com'])
+                        ->from('no-reply@blue-tourism-hokkaido.website')
                         ->subject("【ブルーツーリズム北海道】決済金額通知メール");
                 }
             });
@@ -948,9 +943,9 @@ class ReservationsController extends Controller
             Mail::send(['text' => 'user.reservations.cvsemail'], [
                 "url_cvs" => 'https://blue.zenryo-ec.info/pay?prm=' . encrypt($param_cvs),
                 "number" => $reservation->order_id,
-                "plan" => $reservation->plan->name,
+                "plan" => $request->plan_name,
                 "date" => date('Y年m月d日', strtotime($reservation->fixed_datetime)),
-                "activity" => $reservation->activity_date,
+                "activity" => $request->activity_name,
                 "name_last" => $reservation->user->name_last,
                 "name_first" => $reservation->user->name_first,
                 "email" => $reservation->user->email,
@@ -963,10 +958,8 @@ class ReservationsController extends Controller
                 if ($reservation->user->email) {
                     $message
                         ->to($reservation->user->email)
-                        //->bcc(['blue@quality-t.com', 'test.zenryo@gmail.com'])
-                        ->bcc(['kaname-n@magokorobin.com', 'test@toebisu.jp'])
-                        //->from('no-reply@blue-tourism-hokkaido.website')
-                        ->from('test@toebisu.jp')
+                        ->bcc(['blue@quality-t.com', 'test.zenryo@gmail.com'])
+                        ->from('no-reply@blue-tourism-hokkaido.website')
                         ->subject("【ブルーツーリズム北海道】決済金額通知メール");
                 }
             });
@@ -974,9 +967,9 @@ class ReservationsController extends Controller
             Mail::send(['text' => 'user.reservations.cardemail'], [
                 "url_card" => 'https://blue.zenryo-ec.info/pay?prm=' . encrypt($param_card),
                 "number" => $reservation->order_id,
-                "plan" => $reservation->plan->name,
+                "plan" => $request->plan_name,
                 "date" => date('Y年m月d日', strtotime($reservation->fixed_datetime)),
-                "activity" => $reservation->activity_date,
+                "activity" => $request->activity_name,
                 "name_last" => $reservation->user->name_last,
                 "name_first" => $reservation->user->name_first,
                 "email" => $reservation->user->email,
@@ -989,10 +982,8 @@ class ReservationsController extends Controller
                 if ($reservation->user->email) {
                     $message
                         ->to($reservation->user->email)
-                        //->bcc('blue@quality-t.com')
-                        ->bcc(['kaname-n@magokorobin.com', 'test@toebisu.jp'])
-                        //->from('blue@quality-t.com')
-                        ->from('test@toebisu.jp')
+                        ->bcc('blue@quality-t.com')
+                        ->from('blue@quality-t.com')
                         ->subject("【ブルーツーリズム北海道】決済金額通知メール");
                 }
             });
@@ -1282,11 +1273,6 @@ class ReservationsController extends Controller
                 Log::info("change price result are: " . $mstatus);
             }
         }
-        // 予約ステータスがキャンセルでカード決済・コンビニ決済意外の場合、人数変動無でも更新
-        if($request->status == 'キャンセル' && $reservation->payment_method != 2 && $reservation->payment_method != 3){
-            $reservation->save();
-        }
-
         // コンビニ決済キャンセルの場合
         if ($request->status == 'キャンセル' && $reservation->payment_method == 2 && $reservation->order_id) {
             $mstatus = $this->cvsCancel($reservation->order_id);
@@ -2039,9 +2025,9 @@ class ReservationsController extends Controller
             // 予約者へメール通知
             Mail::send(['text' => 'user.reservations.email'], [
                 "number" => $reservation->order_id,
-                "plan" => $reservation->plan->name,
+                "plan" => $request->plan_name,
                 "date" => date('Y年m月d日', strtotime($reservation->fixed_datetime)),
-                "activity" => $reservation->activity_date,
+                "activity" => $request->activity_name,
                 "name_last" => $reservation->user->name_last,
                 "name_first" => $reservation->user->name_first,
                 "email" => $reservation->user->email,
@@ -2057,8 +2043,7 @@ class ReservationsController extends Controller
                 if ($reservation->user->email) {
                     $message
                         ->to($reservation->user->email)
-                        //->from('blue@quality-t.com')
-                        ->from('test@toebisu.jp')
+                        ->from('blue@quality-t.com')
                         ->subject("【ブルーツーリズム北海道】決済金額変更メール");
                 }
             });

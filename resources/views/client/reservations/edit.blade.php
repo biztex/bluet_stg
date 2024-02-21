@@ -163,7 +163,7 @@
 <td style="text-align: right;">{{ number_format($price->{$weekday}) }} 円</td>
 <input type="hidden" id="price{{$loop->index + 1}}" value="{{ $price->{$weekday} }}">
 @endif
-@if ($reservations->created_at < date('Y-m-d H:i:s',strtotime('2022-06-28 03:00:00')))
+@if ($reservations->created_at < date('Y-m-d H:i:s',strtotime('2022-06-29 22:00:00')))
 <td style="text-align: right; padding-left: 50px;"><div class="row"><input id="per-number{{ ($loop->index + 1) }}" class="number-input" name="type{{$price->type}}_number" value="@php $i = $price->type;echo $reservations->{'type' . $i . '_number'};@endphp"> <span style="line-height: 1.8;" class="col-md-1"> 名</span></div></td>
 <input type="hidden" class="col-md-6 text-right" value="@php $i = $price->type;echo $reservations->{'type' . $i . '_number'};@endphp">
 
@@ -224,10 +224,10 @@ $Number_req[$loop->index + 1] = $type_number;
                                     <td colspan="2" class="bg-light font-weight-bold" style="vertical-align: middle;">返金額(残￥{{ number_format($Possible_refund_amount) }})</td>
                                     @if ($Credit_Cancel->cancel_status == 'NG')
                                         <td id="credit-cancel-price_tables_name" colspan="2" style="text-align: right;" class="font-weight-bold"><input id="credit_cancel_price" style="text-align: right;width: 50%;" name="credit_cancel_price" value="{{ $Credit_Cancel->refund_amount }}">円
-                                        <input type="button" class="btn btn-danger" value="返品" onClick="goCreditCancel1()"></td>
+                                        <input type="button" class="btn btn-danger" value="返品" onClick="goCreditCancel()"></td>
                                     @else
                                         <td id="credit-cancel-price_tables_name" colspan="2" style="text-align: right;" class="font-weight-bold"><input id="credit_cancel_price" style="text-align: right;width: 50%;" name="credit_cancel_price" value="0">円
-                                        <input type="button" class="btn btn-danger" value="キャンセル" onClick="goCreditCancel1()"></td><td></td>
+                                        <input type="button" class="btn btn-danger" value="キャンセル" onClick="goCreditCancel()"></td><td></td>
                                         </tr><tr>
                                         <td colspan="2" class="bg-light font-weight-bold" style="vertical-align: middle;"></td>
                                         <td id="credit_cancel_price{{ $cancnt }}" colspan="2" style="text-align: right;" class="font-weight-bold" name="credit_cancel_price{{ $cancnt }}" value={{ $Credit_Cancel->refund_amount }}>{{ $Credit_Cancel->refund_amount }} 円</td>
@@ -251,7 +251,7 @@ $Number_req[$loop->index + 1] = $type_number;
                       <tr>
                         <td colspan="2" class="bg-light font-weight-bold" style="vertical-align: middle;">返金額(残￥{{ number_format($Possible_refund_amount) }})</td>
                         <td id="credit-cancel-price_tables_name" colspan="2" style="text-align: right;" class="font-weight-bold"><input id="credit_cancel_price" style="text-align: right;width: 50%;" name="credit_cancel_price" value="0">円
-                        <input type="button" class="btn btn-danger" value="キャンセル" onClick="goCreditCancel1()"></td><td></td>
+                        <input type="button" class="btn btn-danger" value="キャンセル" onClick="goCreditCancel()"></td><td></td>
                       </tr>
                       @endif
                       <input type="hidden" id="credit_cancel_flg" name="credit_cancel_flg" value="0">
@@ -344,8 +344,7 @@ $('.submit-send').click(function() {
     }
 
 });
-function goCreditCancel1() {
-    //$(".popup-overlay, .popup-content").addClass("active");
+function goCreditCancel() {
     var checked = confirm("【確認】返金処理を実行してよろしいですか？");
     if (checked == true) {
         $('select[name="status"]').val("キャンセル");
@@ -357,17 +356,6 @@ function goCreditCancel1() {
         return false;
     }
 }
-function goCreditCancel2() {
-    $('select[name="status"]').val("キャンセル");
-    $('#credit_cancel_flg').val(1);
-    $('.submit').parents('form').attr('action', '/client/reservations/update/{{ $reservations->id }}');
-    $('.submit').parents('form').submit();
-      return true;
-}
-$(".close, .popup-overlay").on("click", function(){
-  $(".popup-overlay, .popup-content").removeClass("active");
-  return false;
-});
 </script>
 @stop
 
